@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from langchain.chains import ConversationChain
 from langchain.llms import OpenAI
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferWindowMemory
 
 from src.utils.openapi import count_tokens
 
@@ -17,7 +17,7 @@ questions = [
 
 if __name__ == '__main__':
     llm = OpenAI(model_name='text-davinci-003', temperature=0)
-    chain = ConversationChain(llm=llm, memory=ConversationBufferMemory())
+    chain = ConversationChain(llm=llm, memory=ConversationBufferWindowMemory(k=1))
 
     for question in questions:
         count_tokens(chain, question)
