@@ -22,4 +22,4 @@ if __name__ == '__main__':
     for question in questions:
         count_tokens(chain, question)
 
-    print(chain.memory.buffer)
+    print(chain.memory.load_memory_variables(inputs=dict()))
