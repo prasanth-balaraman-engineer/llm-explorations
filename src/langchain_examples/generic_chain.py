@@ -9,11 +9,11 @@ load_dotenv()
 
 
 def transform_func(inputs: dict) -> dict:
-    text = inputs['text']
+    text = inputs["text"]
 
     # replace multiple new lines and multiple spaces with a single one
-    text = re.sub(r'(\r\n|\r|\n){2,}', r'\n', text)
-    text = re.sub(r'[ \t]+', ' ', text)
+    text = re.sub(r"(\r\n|\r|\n){2,}", r"\n", text)
+    text = re.sub(r"[ \t]+", " ", text)
 
     return dict(output_text=text)
 
@@ -41,13 +41,19 @@ and then passes the formatted response to an LLM. We can build more complex chai
 combining chains with other components.
 """
 
-if __name__ == '__main__':
-    clean_extra_spaces_chain = TransformChain(input_variables=['text'], output_variables=['output_text'],
-                                              transform=transform_func)
-    llm = OpenAI(model_name='text-davinci-003')
-    prompt = PromptTemplate(input_variables=['output_text', 'style'], template=template)
-    style_paraphrase_chain = LLMChain(llm=llm, prompt=prompt, output_key='final_output')
-    sequential_chain = SequentialChain(chains=[clean_extra_spaces_chain, style_paraphrase_chain],
-                                       input_variables=['text', 'style'], output_variables=['final_output'])
-    result = sequential_chain.run(dict(text=input_text, style='a 90s rapper'))
+if __name__ == "__main__":
+    clean_extra_spaces_chain = TransformChain(
+        input_variables=["text"],
+        output_variables=["output_text"],
+        transform=transform_func,
+    )
+    llm = OpenAI(model_name="text-davinci-003")
+    prompt = PromptTemplate(input_variables=["output_text", "style"], template=template)
+    style_paraphrase_chain = LLMChain(llm=llm, prompt=prompt, output_key="final_output")
+    sequential_chain = SequentialChain(
+        chains=[clean_extra_spaces_chain, style_paraphrase_chain],
+        input_variables=["text", "style"],
+        output_variables=["final_output"],
+    )
+    result = sequential_chain.run(dict(text=input_text, style="a 90s rapper"))
     print(result)
